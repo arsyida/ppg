@@ -1,0 +1,204 @@
+:root {
+    --primary-color: #81007F;
+    --primary-hover: #bd5bbc;
+    --secondary-color: #F0F2FF;
+    --background-color: #f4f7fc;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --border-color: #e2e8f0;
+    --radius-md: 0.5rem;
+    --radius-lg: 1.5rem;
+    --shadow-md: 0 0 20px rgba(0, 0, 0, 0.05);
+    --transition-fast: 0.2s ease-in-out;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    font-weight: 600;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), transform 0.1s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: var(--background-color);
+}
+
+.login-card {
+    border-radius: var(--radius-lg);
+    border: none;
+    overflow: hidden; 
+    max-width: 1000px;
+    width: 100%;
+    box-shadow: var(--shadow-md);
+    background-color: #fff;
+}
+
+.illustration-panel {
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+}
+
+.illustration-panel img {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.illustration-panel h3 {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+}
+
+.form-panel {
+    padding: 3rem;
+}
+
+.form-panel h2 {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.form-panel p {
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.form-control {
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(129, 0, 127, 0.25);
+    outline: none;
+}
+
+/* ====== Result Page Style ====== */
+.result-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: var(--background-color);
+}
+
+.result-card {
+    border-radius: 1.5rem;
+    border: none;
+    overflow: hidden;
+    max-width: 1000px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.result-card .illustration-panel {
+    background-color: var(--secondary-color);
+}
+
+.bg-success-light {
+    background-color: #E8FFF1;
+}
+
+.bg-danger-light {
+    background-color: #FFF0F0;
+}
+
+.result-card img {
+    max-width: 280px;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.result-card h3 {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 1rem;
+}
+
+.result-card p {
+    color: var(--text-light);
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+    .result-card {
+        max-width: 95%;
+        margin: 1rem auto;
+        border-radius: 1rem;
+    }
+
+    .result-card .form-panel {
+        padding: 2rem 1.5rem;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .form-panel {
+        padding: 2rem;
+    }
+
+    .illustration-panel {
+        padding: 2rem;
+    }
+
+    .illustration-panel img {
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-card {
+        border-radius: var(--radius-md);
+    }
+
+    .form-panel {
+        padding: 1.5rem;
+    }
+
+    .illustration-panel {
+        display: none; /* Sembunyikan ilustrasi di layar kecil */
+    }
+}
