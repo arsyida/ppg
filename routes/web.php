@@ -9,7 +9,7 @@ use App\Http\Controllers\PesertaController;
 // 1. HALAMAN PUBLIK (LOGIN)
 // ==========================
 // Login Peserta (Halaman Utama)
-Route::get('/', [AuthController::class, 'showPesertaLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showPesertaLogin'])->name('login');
 Route::post('/login-peserta', [AuthController::class, 'prosesPesertaLogin'])->name('login.peserta.process');
 
 // Login Admin
@@ -23,10 +23,21 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 // ==========================
 // 2. AREA KHUSUS PESERTA
 // ==========================
-Route::middleware(['auth.peserta'])->group(function () {
-    // Halaman Index (Perbaikan Data)
-    Route::get('/portal', [PesertaController::class, 'index'])->name('peserta.index');
-    Route::post('/portal/simpan', [PesertaController::class, 'update'])->name('peserta.update');
+Route::middleware(['auth.peserta', 'no.cache'])->group(function () {
+    // Dashboard
+    Route::get('/', [PesertaController::class, 'dashboard'])->name('peserta.dashboard');
+
+    // Halaman Edit (Formulir)
+    Route::get('/edit', [PesertaController::class, 'edit'])->name('peserta.edit'); // <-- Ini yang hilang
+
+    // Proses Simpan (Update)
+    Route::post('/simpan', [PesertaController::class, 'update'])->name('peserta.update');
+
+    // page tracking/info pengiriman
+    Route::get('/tracking', [PesertaController::class, 'tracking'])->name('peserta.tracking');
+
+    // Route POST untuk memproses simpan
+    Route::post('/simpan', [PesertaController::class, 'update'])->name('peserta.update');
 });
 
 
@@ -36,15 +47,28 @@ Route::middleware(['auth.peserta'])->group(function () {
 Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
     
     // Dashboard Page
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
     // Import Page
-    Route::get('/import', [AdminController::class, 'importPage'])->name('admin.import');
-    Route::post('/import', [AdminController::class, 'processImport'])->name('admin.import.proses');
-    
-    // Edit Data Page (List Semua Peserta)
-    Route::get('/data-peserta', [AdminController::class, 'listPeserta'])->name('admin.peserta.list');
-    Route::get('/data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
-    Route::post('/data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
+    Route::get('/admin/import', [AdminController::class, 'importPage'])->name('admin.import');
+    Route::post('/admin/import', [AdminController::class, 'processImport'])->name('admin.import.proses');
 
+    // Edit Data Page (List Semua Peserta)
+    Route::get('/admin/data-peserta', [AdminController::class, 'listPeserta'])->name('admin.peserta.list');
+    Route::get('/admin/data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
+    Route::post('/admin/data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
+
+});
+
+
+Route::middleware(['auth.peserta'])->group(function () {
+    
+    // 1. Dashboard
+    Route::get('/', [PesertaController::class, 'dashboard'])->name('peserta.dashboard');
+
+    // 2. TAMBAHKAN INI: Halaman Edit (Formulir)
+    Route::get('/edit', [PesertaController::class, 'edit'])->name('peserta.edit'); // <-- Ini yang hilang
+
+    // 3. Proses Simpan (Update)
+    Route::post('/simpan', [PesertaController::class, 'update'])->name('peserta.update');
 });

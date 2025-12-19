@@ -17,36 +17,36 @@ class AuthController extends Controller
     // Tampilkan Form Login Peserta
     public function showPesertaLogin()
     {
-        // Pastikan folder resources/views/auth/login-peserta.blade.php nanti dibuat
-        return view('login-peserta');
+        return view('peserta.login-peserta');
     }
 
     // Proses Login Peserta
     public function prosesPesertaLogin(Request $request)
-    {
-        // 1. Validasi Input
-        $request->validate([
-            'no_ukg' => 'required|numeric',
-            'tanggal_lahir' => 'required|date',
-        ]);
+{
+    $request->validate([
+        'no_ukg' => 'required|numeric',
+        'tanggal_lahir' => 'required|date',
+    ]);
 
-        // 2. Cek ke Database
-        $peserta = Peserta::where('no_ukg', $request->no_ukg)
-                          ->where('tanggal_lahir', $request->tanggal_lahir)
-                          ->first();
+    $peserta = Peserta::where('no_ukg', $request->no_ukg)
+                      ->where('tanggal_lahir', $request->tanggal_lahir)
+                      ->first();
 
-        // 3. Logika Login
-        if ($peserta) {
-            // Simpan session khusus peserta (sesuai Middleware tadi)
-            Session::put('peserta_logged_in', true);
-            Session::put('peserta_data', $peserta); // Simpan data user
+    if ($peserta) {
+        // --- KONDISI LULUS ---
+        Session::put('peserta_logged_in', true);
+        Session::put('peserta_data', $peserta);
 
-            return redirect()->route('peserta.index')->with('message', 'Login Berhasil!');
-        }
-
-        // 4. Jika Gagal
-        return back()->with('error', 'Data tidak ditemukan. Cek No UKG & Tanggal Lahir.');
-    }
+        // Arahkan ke Dashboard (resources/views/peserta/index.blade.php)
+        return redirect()->route('peserta.dashboard');
+    } 
+    
+    // --- KONDISI TIDAK LULUS ---
+    // Jangan redirect back(), tapi tampilkan halaman Tidak Lulus
+    return view('peserta.tidak-lulus', [
+        'no_ukg' => $request->no_ukg
+    ]);
+}
 
     // ==========================================
     // 2. BAGIAN ADMIN (Username & Password)
@@ -55,7 +55,7 @@ class AuthController extends Controller
     // Tampilkan Form Login Admin
     public function showAdminLogin()
     {
-        return view('auth.login-admin');
+        return view('admin.login-admin');
     }
 
     // Proses Login Admin

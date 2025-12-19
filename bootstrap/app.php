@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
         'auth.admin' => \App\Http\Middleware\CekLoginAdmin::class,
         'auth.peserta' => \App\Http\Middleware\CekLoginPeserta::class,
+        'no.cache'     => \App\Http\Middleware\PreventBackHistory::class,
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

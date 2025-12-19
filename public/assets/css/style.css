@@ -1,3 +1,6 @@
+/* =========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================= */
 :root {
     --primary-color: #81007F;
     --primary-hover: #bd5bbc;
@@ -25,6 +28,9 @@ body {
     line-height: 1.6;
 }
 
+/* =========================================
+   2. COMPONENTS (BUTTONS, CARDS, FORMS)
+   ========================================= */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -34,8 +40,7 @@ body {
     transition: background-color var(--transition-fast), border-color var(--transition-fast), transform 0.1s ease;
 }
 
-.btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:hover, .btn-primary:focus {
     background-color: var(--primary-hover);
     border-color: var(--primary-hover);
 }
@@ -44,7 +49,21 @@ body {
     transform: scale(0.98);
 }
 
-.login-wrapper {
+.form-control {
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(129, 0, 127, 0.25);
+    outline: none;
+}
+
+/* --- Card Styles (Login & Result) --- */
+.login-wrapper, .result-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -53,10 +72,10 @@ body {
     background: var(--background-color);
 }
 
-.login-card {
+.login-card, .result-card {
     border-radius: var(--radius-lg);
     border: none;
-    overflow: hidden; 
+    overflow: hidden;
     max-width: 1000px;
     width: 100%;
     box-shadow: var(--shadow-md);
@@ -90,143 +109,13 @@ body {
     padding: 3rem;
 }
 
-.form-panel h2 {
-    font-weight: 700;
-    color: var(--text-dark);
-}
+/* --- Helper Classes --- */
+.bg-success-light { background-color: #E8FFF1; }
+.bg-danger-light { background-color: #FFF0F0; }
 
-.form-panel p {
-    color: var(--text-light);
-    margin-bottom: 2rem;
-}
-
-.form-control {
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border-color);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(129, 0, 127, 0.25);
-    outline: none;
-}
-
-/* ====== Result Page Style ====== */
-.result-wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background-color: var(--background-color);
-}
-
-.result-card {
-    border-radius: 1.5rem;
-    border: none;
-    overflow: hidden;
-    max-width: 1000px;
-    width: 100%;
-    background-color: #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-.result-card .illustration-panel {
-    background-color: var(--secondary-color);
-}
-
-.bg-success-light {
-    background-color: #E8FFF1;
-}
-
-.bg-danger-light {
-    background-color: #FFF0F0;
-}
-
-.result-card img {
-    max-width: 280px;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
-.result-card h3 {
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-top: 1rem;
-}
-
-.result-card p {
-    color: var(--text-light);
-}
-
-/* Responsif */
-@media (max-width: 768px) {
-    .result-card {
-        max-width: 95%;
-        margin: 1rem auto;
-        border-radius: 1rem;
-    }
-
-    .result-card .form-panel {
-        padding: 2rem 1.5rem;
-    }
-}
-
-
-@media (max-width: 992px) {
-    .form-panel {
-        padding: 2rem;
-    }
-
-    .illustration-panel {
-        padding: 2rem;
-    }
-
-    .illustration-panel img {
-        max-width: 220px;
-    }
-}
-
-@media (max-width: 768px) {
-    .login-card {
-        border-radius: var(--radius-md);
-    }
-
-    .form-panel {
-        padding: 1.5rem;
-    }
-
-    .illustration-panel {
-        display: none; /* Sembunyikan ilustrasi di layar kecil */
-    }
-}
-
-/*
-========================================
-CSS TAMBAHAN UNTUK DASHBOARD (LULUS)
-========================================
-*/
-#wrapper {
-    display: flex;
-    min-height: 100vh;
-}
-
-#sidebar-wrapper {
-    min-height: 100vh;
-    width: 270px;
-    background-color: #fff; /* Sidebar putih */
-    border-right: 1px solid var(--border-color);
-    transition: margin 0.25s ease-out;
-}
-
-#page-content-wrapper {
-    flex: 1;
-    min-width: 0; 
-    background-color: var(--background-color);
-}
-
+/* =========================================
+   3. SIDEBAR & NAVIGATION STYLES (VISUAL)
+   ========================================= */
 .sidebar-heading {
     border-bottom: 1px solid var(--border-color);
 }
@@ -247,13 +136,13 @@ CSS TAMBAHAN UNTUK DASHBOARD (LULUS)
     transition: all var(--transition-fast);
 }
 
-/* Link Sidebar Aktif (Sesuai Sketsa) */
+/* Link Sidebar Aktif */
 .list-group-item.active {
-    background-color: var(--secondary-color); /* Warna ungu muda */
-    color: var(--primary-color); /* Warna ungu tua */
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
     font-weight: 700;
     border-left: 5px solid var(--primary-color);
-    padding-left: 25px; 
+    padding-left: 25px;
 }
 
 .list-group-item.active i {
@@ -268,176 +157,95 @@ CSS TAMBAHAN UNTUK DASHBOARD (LULUS)
 /* Placeholder Pas Foto */
 .pas-foto-placeholder {
     width: 200px;
-    height: 267px; /* Rasio 3x4 */
+    height: 267px;
     border: 2px dashed var(--border-color);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    font-weight: 600;
-    color: var(--text-light);
     background-color: var(--secondary-color);
+    color: var(--text-light);
+    font-weight: 600;
 }
 
-/*
-========================================
-CSS RESPONSIVE (Untuk Sidebar)
-========================================
-*/
+/* =========================================
+   4. LAYOUT SYSTEM (DESKTOP DEFAULT)
+   ========================================= */
+#wrapper {
+    display: flex;
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+}
 
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 270px; /* Lebar Sidebar */
+    margin-left: 0;
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    transition: margin 0.3s ease-out, transform 0.3s ease-out;
+    z-index: 1000;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    flex: 1; /* Mengisi sisa ruang kosong */
+    min-width: 0;
+}
+
+/* Overlay Hitam (Default Sembunyi) */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Hitam transparan */
+    z-index: 9998; /* Di bawah sidebar mobile (9999), di atas konten */
+    backdrop-filter: blur(2px);
+}
+
+/* =========================================
+   5. RESPONSIVE MOBILE (Layar < 768px)
+   ========================================= */
 @media (max-width: 768px) {
-    /* Sembunyikan sidebar di mobile */
+    
+    /* 1. Sidebar: Default Sembunyi (Geser ke Kiri Luar Layar) */
     #sidebar-wrapper {
-        margin-left: -270px; 
+        position: fixed; /* Melayang di atas konten */
+        top: 0;
+        bottom: 0;
+        left: 0;
+        margin-left: 0; /* Reset margin */
+        transform: translateX(-100%); /* Geser total ke kiri */
+        z-index: 9999; /* PALING ATAS */
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1); 
+    }
+
+    /* 2. Logika Toggle: Munculkan Sidebar */
+    #wrapper.toggled #sidebar-wrapper {
+        transform: translateX(0); /* Geser kembali ke 0 (Muncul) */
+    }
+
+    /* 3. Logika Toggle: Munculkan Overlay */
+    #wrapper.toggled #overlay {
+        display: block;
+    }
+
+    /* 4. Penyesuaian Komponen Mobile */
+    .login-card, .result-card {
+        border-radius: 1rem;
     }
     
-    #page-content-wrapper {
-        min-width: 100%;
+    .illustration-panel {
+        display: none;
     }
-
+    
     .pas-foto-placeholder {
         margin-top: 2rem;
     }
-}
-
-
-
-/* pagination style */
-/* --- Tabel --- */
-        .table th { white-space: nowrap; font-size: 0.8rem; padding: 0.5rem 0.75rem; }
-        .table td { font-size: 0.8rem; padding: 0.4rem 0.75rem; vertical-align: middle; }
-
-        /* --- Pagination Container --- */
-        .pagination-container {
-            background-color: #fff;
-            padding: 8px 15px;
-            border-radius: var(--radius-md, 0.5rem);
-            border: 1px solid var(--border-color, #e2e8f0);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* --- Pagination Custom (UL) --- */
-        .pagination-custom {
-            display: flex;
-            align-items: center;
-            list-style: none;
-            padding: 0;
-            margin-bottom: 0;
-            gap: 5px;
-        }
-        /* --- Styling untuk SEMUA item di dalam LI (a dan span) --- */
-        .pagination-custom li > a,
-        .pagination-custom li > span {
-            display: block;
-            padding: 6px 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            color: var(--text-light, #64748b);
-            background-color: transparent;
-            border: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            font-size: 0.8rem;
-            min-width: 38px;
-            text-align: center;
-        }
-        /* Tombol Aktif (Target LI dengan class active, lalu A di dalamnya) */
-        .pagination-custom li.active > a {
-            background-color: var(--primary-color, #81007F);
-            color: #fff;
-        }
-        /* Tombol Disabled (Target LI dengan class disabled, lalu SPAN atau A di dalamnya) */
-        .pagination-custom li.disabled > span,
-        .pagination-custom li.disabled > a.nav-link {
-            color: #aaa;
-            background-color: transparent;
-            cursor: default; /* Tambahkan cursor default untuk disabled */
-        }
-        /* Hover Tombol Angka (Target A biasa, bukan .nav-link) */
-        .pagination-custom li > a:hover:not(.nav-link) {
-            background-color: #f0f0f0;
-        }
-        /* Hover Tombol Aktif */
-        .pagination-custom li.active > a:hover {
-            background-color: var(--primary-hover, #bd5bbc);
-        }
-        /* Tombol "Back" dan "Next" (Target A dengan class nav-link) */
-        .pagination-custom li > a.nav-link {
-            background-color: transparent;
-            border: none;
-            color: var(--primary-color, #81007F);
-            font-weight: 600;
-            min-width: auto; /* Hapus min-width untuk Back/Next */
-        }
-        .pagination-custom li > a.nav-link:hover {
-            background-color: var(--secondary-color, #F0F2FF);
-        }
- /* Agar UL dan Form sejajar dalam Nav */
-        nav[aria-label="Page navigation"] {
-            display: flex;
-            align-items: center;
-            gap: 15px; /* Jarak antara tombol angka dan form */
-            flex-wrap: wrap;
-        }
-
-        .goto-page-form {
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Jarak antar elemen dalam form */
-            display: inline-block;
-        }
-
-        .goto-page-form label {
-            font-size: 0.85rem;
-            white-space: nowrap;
-            color: var(--text-light, #64748b);
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-
-        .goto-page-form .goto-input {
-            width: 60px !important; /* Lebar input yang pas */
-            text-align: center;
-            padding: 4px 5px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color, #e2e8f0);
-        }
-        
-        /* Sedikit styling untuk tombol Go */
-        .goto-page-form button {
-            border-radius: 6px;
-            padding: 4px 10px;
-        }
-
-/* Style Tambahan Khusus Timeline Statis */
-.timeline-static {
-    border-left: 2px solid #e9ecef;
-    padding-left: 20px;
-    margin-left: 10px;
-    margin-top: 20px;
-}
-.timeline-item {
-    position: relative;
-    padding-bottom: 20px;
-}
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -26px;
-    top: 5px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #fff;
-    border: 3px solid #ccc;
-}
-.timeline-item.active::before {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(129, 0, 127, 0.2);
-}
-.text-primary-custom {
-    color: var(--primary-color);
-}
+    
+    #page-content-wrapper {
+        width: 100%;
+        position: relative;
+    }
+}           

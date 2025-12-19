@@ -1,24 +1,28 @@
-<div class="bg-white" id="sidebar-wrapper">
+<div class="bg-white border-end" id="sidebar-wrapper">
     <div class="sidebar-heading text-center py-4">
-        <img src="assets/images/Logo-PPG-FKIP.png" alt="Logo PPG" style="width: 50px;">
-        <span class="ms-2 fs-5 fw-bold">PPG FKIP UNILA</span>
+        <img src="{{ asset('assets/images/Logo-PPG-FKIP.png') }}" alt="Logo PPG" style="width: 50px;">
+        <div class="ms-2 fs-5 fw-bold mt-2">PPG FKIP UNILA</div>
     </div>
+    
     <div class="list-group list-group-flush my-3">
-        
-        <a href="index.php" class="list-group-item list-group-item-action <?= ($currentPage == 'index.php') ? 'active' : '' ?>">
-            <i class="bi bi-house-door-fill me-2"></i>Beranda
-        </a>
-        
-        <a href="perbaikan-data.php" class="list-group-item list-group-item-action <?= ($currentPage == 'perbaikan-data.php') ? 'active' : '' ?>">
-            <i class="bi bi-pencil-square me-2"></i>Perbaikan Data
-        </a>
-        
-        <a href="info-pengiriman.php" class="list-group-item list-group-item-action <?= ($currentPage == 'info-pengiriman.php') ? 'active' : '' ?>">
-            <i class="bi bi-truck me-2"></i>Info Pengiriman
+        <a class="list-group-item list-group-item-action list-group-item-light p-3 {{ Route::is('peserta.dashboard') ? 'active' : '' }}" 
+           href="{{ route('peserta.dashboard') }}">
+           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         </a>
 
-        <a href="logout.php" class="list-group-item list-group-item-action text-danger mt-5">
-            <i class="bi bi-box-arrow-left me-2"></i>Logout
+        <a class="list-group-item list-group-item-action list-group-item-light p-3 {{ Route::is('peserta.edit') ? 'active' : '' }}" 
+           href="{{ route('peserta.edit') }}">
+           <i class="bi bi-pencil-square me-2"></i> Perbaikan Data
+        </a>
+        
+        <a class="list-group-item list-group-item-action list-group-item-light p-3 {{ Route::is('peserta.tracking') ? 'active' : '' }}" 
+            href="{{ route('peserta.tracking') }}">
+            <i class="bi bi-truck me-2"></i> Info Pengiriman
+        </a>
+
+        <a class="list-group-item list-group-item-action list-group-item-light p-3 text-danger mt-3" 
+           href="{{ route('logout') }}">
+           <i class="bi bi-box-arrow-left me-2"></i> Logout
         </a>
     </div>
 </div>

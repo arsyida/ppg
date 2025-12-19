@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Perbaikan Data Peserta')
+@section('title', 'Login Peserta PPG FKIP UNILA')
 
 @section('content')
 

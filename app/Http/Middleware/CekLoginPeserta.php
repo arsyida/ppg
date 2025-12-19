@@ -17,7 +17,10 @@ class CekLoginPeserta
     {
         // Cek session khusus peserta
         if (!session()->has('peserta_logged_in')) {
-            return redirect('/')->with('error', 'Silakan login dulu.');
+            return redirect()->route('login')
+            ->with('error', 'Anda harus login terlebih dahulu.')
+            //hapus cache pada browser
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
         }
         return $next($request);
     }
