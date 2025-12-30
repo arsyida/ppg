@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash; // Penting jika password admin di-hash
 class AuthController extends Controller
 {
     // ==========================================
-    // 1. BAGIAN PESERTA (No UKG & Tanggal Lahir)
+    // 1. BAGIAN LOGIN PESERTA (No UKG & Tanggal Lahir)
     // ==========================================
 
     // Tampilkan Form Login Peserta
@@ -22,31 +22,31 @@ class AuthController extends Controller
 
     // Proses Login Peserta
     public function prosesPesertaLogin(Request $request)
-{
-    $request->validate([
-        'no_ukg' => 'required|numeric',
-        'tanggal_lahir' => 'required|date',
-    ]);
+    {
+        $request->validate([
+            'no_ukg' => 'required|numeric',
+            'tanggal_lahir' => 'required|date',
+        ]);
 
-    $peserta = Peserta::where('no_ukg', $request->no_ukg)
-                      ->where('tanggal_lahir', $request->tanggal_lahir)
-                      ->first();
+        $peserta = Peserta::where('no_ukg', $request->no_ukg)
+                          ->where('tanggal_lahir', $request->tanggal_lahir)
+                          ->first();
 
-    if ($peserta) {
-        // --- KONDISI LULUS ---
-        Session::put('peserta_logged_in', true);
-        Session::put('peserta_data', $peserta);
+        if ($peserta) {
+            // --- KONDISI LULUS ---
+            Session::put('peserta_logged_in', true);
+            Session::put('peserta_data', $peserta);
 
-        // Arahkan ke Dashboard (resources/views/peserta/index.blade.php)
-        return redirect()->route('peserta.dashboard');
-    } 
+            // Arahkan ke Dashboard (resources/views/peserta/index.blade.php)
+            return redirect()->route('peserta.dashboard');
+        } 
     
-    // --- KONDISI TIDAK LULUS ---
-    // Jangan redirect back(), tapi tampilkan halaman Tidak Lulus
-    return view('peserta.tidak-lulus', [
-        'no_ukg' => $request->no_ukg
-    ]);
-}
+        // --- KONDISI TIDAK LULUS ---
+        // Jangan redirect back(), tapi tampilkan halaman Tidak Lulus
+        return view('peserta.tidak-lulus', [
+            'no_ukg' => $request->no_ukg
+        ]);
+    }
 
     // ==========================================
     // 2. BAGIAN ADMIN (Username & Password)
@@ -71,15 +71,7 @@ class AuthController extends Controller
         $admin = Admin::where('username', $request->username)->first();
 
         // 3. Cek Password
-        // CATATAN PENTING:
-        // Jika di database password Anda PLAIN TEXT (belum dienkripsi), pakai cara A.
-        // Jika di database password Anda BCRYPT (standar Laravel), pakai cara B.
-        
-        // CARA A (Plain Text - Sesuai Native PHP biasanya):
-        if ($admin && $admin->password === $request->password) {
-            
-        // CARA B (Jika nanti Anda mau migrasi ke enkripsi aman):
-        // if ($admin && Hash::check($request->password, $admin->password)) {
+        if ($admin && Hash::check($request->password, $admin->password)) {
 
             // Simpan session khusus admin
             Session::put('admin_logged_in', true);

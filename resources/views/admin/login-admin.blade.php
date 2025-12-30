@@ -1,3 +1,9 @@
+@extends('layouts.app')
+
+@section('title', 'Login Admin PPG FKIP UNILA')
+
+@section('content')
+
 <div class="login-wrapper">
         <div class="card login-card shadow-lg" style="max-width: 450px;">
             <div class="card-body p-5">
@@ -21,3 +27,4 @@
             </div>
         </div>
     </div>
+    @endsection
