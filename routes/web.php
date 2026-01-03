@@ -10,11 +10,11 @@ use App\Http\Controllers\PesertaController;
 // ==========================
 // Login Peserta (Halaman Utama)
 Route::get('/login', [AuthController::class, 'showPesertaLogin'])->name('login');
-Route::post('/login-peserta', [AuthController::class, 'prosesPesertaLogin'])->name('login.peserta.process');
+Route::post('/login', [AuthController::class, 'prosesPesertaLogin'])->name('login.peserta.process');
 
 // Login Admin
-Route::get('/login-admin', [AuthController::class, 'showAdminLogin'])->name('admin.login');
-Route::post('/login-admin', [AuthController::class, 'prosesAdminLogin'])->name('login.admin.process');
+Route::prefix('admin')->get('/login', [AuthController::class, 'showAdminLogin'])->name('admin.login');
+Route::prefix('admin')->post('/login', [AuthController::class, 'prosesAdminLogin'])->name('login.admin.process');
 
 // Logout
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -44,8 +44,8 @@ Route::middleware(['auth.peserta', 'no.cache'])->group(function () {
 // ==========================
 // 3. AREA KHUSUS ADMIN
 // ==========================
-Route::prefix('admin')->middleware(['admin'])->group(function () {
-    
+Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
+
     // Dashboard Page
     Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
@@ -53,9 +53,13 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::get('import', [AdminController::class, 'importPage'])->name('admin.import');
     Route::post('import', [AdminController::class, 'processImport'])->name('admin.import.proses');
 
-    // Edit Data Page (List Semua Peserta)
-    Route::get('data-peserta', [AdminController::class, 'listPeserta'])->name('admin.peserta.list');
-    Route::get('data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
-    Route::post('data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
+    // Route Export Excel
+    Route::get('/export', [AdminController::class, 'exportExcel'])->name('admin.export');
+
+    // Route untuk Halaman Edit
+    Route::get('/data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
+
+    // Route untuk Proses Update (POST/PUT)
+    Route::put('/data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
 
 });

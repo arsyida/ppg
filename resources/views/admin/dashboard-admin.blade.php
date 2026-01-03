@@ -1,35 +1,43 @@
 @extends('layouts.app')
 
-@section('title', 'Login Admin PPG FKIP UNILA')
+@section('title', 'Admin Dashboard')
 
 @section('content')
 
-<div class="d-flex" id="wrapper">
-    <?php require 'sidebar.php'; ?>
+{{-- CSS Tambahan (Sesuai kode native Anda) --}}
+<style>
+    .table th { white-space: nowrap; }
+    /* Pastikan CSS .pagination-custom dsb sudah ada di style.css global */
+</style>
 
+<div class="d-flex" id="wrapper">
     <div id="page-content-wrapper">
         <div class="container-fluid p-4 p-md-5">
             
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h2 fw-bold mb-0">Data Peserta Lulus PPG</h1>
-                <a href="export.php" class="btn btn-primary px-3 py-2">
+                <a href="{{ route('admin.export') }}" class="btn btn-primary px-3 py-2">
                     <i class="bi bi-download me-2"></i>Export Data
                 </a>
             </div>
             
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-                <form action="" method="GET" class="d-flex align-items-center flex-grow-1 me-3">
-                    <div class="search-box me-2 w-100">
-                        <input id="search" type="text" name="search" class="form-control" placeholder="Ketik Nama, UKG, atau NIM..." value="<?= htmlspecialchars($search) ?>" autocomplete="off">
+                {{-- Form Search --}}
+                <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex align-items-center flex-grow-1 me-3">
+                    <div class="search-box d-flex me-2 w-100">
+                        <input id="search" type="text" name="search" class="form-control" 
+                               placeholder="Ketik Nama, UKG, atau NIM..." 
+                               value="{{ $keyword }}" autocomplete="off">
                         <button type="submit" class="btn btn-primary">
                              <i class="bi bi-search"></i> Cari
                         </button>
                     </div>
                 </form>
 
+                {{-- Pagination Container Atas --}}
                 <div class="pagination-container mt-3 mt-lg-0">
-                    <?php echo $pagination_html; ?>
+                    @include('admin.partials.pagination')
                 </div>
             </div>
             
@@ -55,43 +63,16 @@
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                <?php if (empty($peserta_list)): ?>
-                                    <tr>
-                                        <td colspan="13" class="text-center text-muted">Data tidak ditemukan.</td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php 
-                                    $i = $offset + 1; 
-                                    foreach ($peserta_list as $peserta): 
-                                    ?>
-                                    <tr>
-                                        <td><?= $i++ ?></td>
-                                        <td><?= htmlspecialchars($peserta['nama_peserta']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['tempat_lahir']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['tanggal_lahir']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['no_ukg']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['nim']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['nik']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['nama_bidang_studi']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['jenis_ppg']) ?></td>
-                                        <td><?= htmlspecialchars($peserta['no_hp'] ?? '-') ?></td>
-                                        <td><?= htmlspecialchars($peserta['alamat_lengkap'] ?? '-') ?></td>
-                                        <td><?= htmlspecialchars($peserta['pas_foto'] ?? '-') ?></td>
-                                        <td>
-                                            <a href="edit-peserta.php?no_ukg=<?= htmlspecialchars($peserta['no_ukg']) ?>" class="btn btn-sm btn-warning">
-                                                <i class="bi bi-pencil-fill"></i> Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                {{-- Include Rows Partial --}}
+                                @include('admin.partials.table_rows')
                             </tbody>
                         </table>
                     </div>
 
                     <div class="d-flex justify-content-end mt-4">
+                        {{-- Pagination Container Bawah --}}
                         <div class="pagination-container-bottom">
-                            <?php echo $pagination_html; ?>
+                            @include('admin.partials.pagination')
                         </div>
                     </div>
 
@@ -100,5 +81,52 @@
 
         </div>
     </div>
-    <script src="{{ asset('assets/js/admin/script.js') }}"></script>
+</div>
+
+{{-- SCRIPT AJAX --}}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    const searchInput = document.getElementById('search'); 
+    const tableBody = document.getElementById('table-body');
+    const paginationContainers = document.querySelectorAll('.pagination-container, .pagination-container-bottom'); 
+
+    // Fungsi Fetch Data
+    function loadData(query) {
+        // Ganti URL ke Route Laravel
+        // Perhatikan parameter ?ajax_search=1 agar Controller tahu ini AJAX
+        const url = "{{ route('admin.dashboard') }}?ajax_search=1&keyword=" + encodeURIComponent(query);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                // A. Update Tabel
+                if (data.table_html !== undefined) {
+                    tableBody.innerHTML = data.table_html;
+                }
+
+                // B. Update Pagination
+                paginationContainers.forEach(container => {
+                    if (data.pagination_html !== undefined) {
+                        container.innerHTML = data.pagination_html;
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Event Listener Live Search
+    let debounceTimer;
+    if(searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const query = searchInput.value;
+                loadData(query);
+            }, 300);
+        });
+    }
+});
+</script>
+
 @endsection

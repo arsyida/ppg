@@ -48,21 +48,19 @@ class PesertaController extends Controller
         return redirect()->route('login')->with('error', 'Sesi habis, silakan login ulang.');
     }
 
-    // 2. Validasi (Sesuaikan dengan kolom tabel Anda)
     $validated = $request->validate([
         'nama_peserta'      => 'required|string|max:100',
         'nik'               => 'required|string|max:20',
-        'no_hp'             => 'required|string|max:14',
+        'no_hp'             => 'required|string|max:20',
         'tempat_lahir'      => 'required|string|max:100',
         'tanggal_lahir'     => 'required|date',
         'nim'               => 'required|string|max:20',
         'alamat_lengkap'    => 'required|string',
         'nama_bidang_studi' => 'required|string|max:100',
-        'jenis_ppg'         => 'required|string',
-        'pas_foto'          => 'nullable|image|max:1024|mimes:jpg,jpeg,png',
+        'jenis_ppg'         => 'required|in:CALON GURU,GURU TERTENTU',
+        'pas_foto'          => 'nullable|image|max:1024|mimes:jpg,jpeg,png', 
     ]);
 
-    // 3. CARI DATA DI DATABASE (SOLUSI ERROR NULL)
     // Pastikan no_ukg dibersihkan dari spasi (trim)
     $no_ukg_target = trim($sessionPeserta->no_ukg);
     

@@ -105,8 +105,22 @@ body {
     margin-top: 1.5rem;
 }
 
+.result-card p {
+    color: var(--text-light);
+}
+
 .form-panel {
     padding: 3rem;
+}
+
+.form-panel h2 {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.form-panel p {
+    color: var(--text-light);
+    margin-bottom: 2rem;
 }
 
 /* --- Helper Classes --- */
@@ -204,6 +218,146 @@ body {
     backdrop-filter: blur(2px);
 }
 
+
+/* pagination style */
+/* --- Tabel --- */
+        .table th { white-space: nowrap; font-size: 0.8rem; padding: 0.5rem 0.75rem; }
+        .table td { font-size: 0.8rem; padding: 0.4rem 0.75rem; vertical-align: middle; }
+
+        /* --- Pagination Container --- */
+        .pagination-container {
+            background-color: #fff;
+            padding: 8px 15px;
+            border-radius: var(--radius-md, 0.5rem);
+            border: 1px solid var(--border-color, #e2e8f0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* --- Pagination Custom (UL) --- */
+        .pagination-custom {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 0;
+            gap: 5px;
+        }
+        /* --- Styling untuk SEMUA item di dalam LI (a dan span) --- */
+        .pagination-custom li > a,
+        .pagination-custom li > span {
+            display: block;
+            padding: 6px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-light, #64748b);
+            background-color: transparent;
+            border: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            min-width: 38px;
+            text-align: center;
+        }
+        /* Tombol Aktif (Target LI dengan class active, lalu A di dalamnya) */
+        .pagination-custom li.active > a {
+            background-color: var(--primary-color, #81007F);
+            color: #fff;
+        }
+        /* Tombol Disabled (Target LI dengan class disabled, lalu SPAN atau A di dalamnya) */
+        .pagination-custom li.disabled > span,
+        .pagination-custom li.disabled > a.nav-link {
+            color: #aaa;
+            background-color: transparent;
+            cursor: default; /* Tambahkan cursor default untuk disabled */
+        }
+        /* Hover Tombol Angka (Target A biasa, bukan .nav-link) */
+        .pagination-custom li > a:hover:not(.nav-link) {
+            background-color: #f0f0f0;
+        }
+        /* Hover Tombol Aktif */
+        .pagination-custom li.active > a:hover {
+            background-color: var(--primary-hover, #bd5bbc);
+        }
+        /* Tombol "Back" dan "Next" (Target A dengan class nav-link) */
+        .pagination-custom li > a.nav-link {
+            background-color: transparent;
+            border: none;
+            color: var(--primary-color, #81007F);
+            font-weight: 600;
+            min-width: auto; /* Hapus min-width untuk Back/Next */
+        }
+        .pagination-custom li > a.nav-link:hover {
+            background-color: var(--secondary-color, #F0F2FF);
+        }
+ /* Agar UL dan Form sejajar dalam Nav */
+        nav[aria-label="Page navigation"] {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Jarak antara tombol angka dan form */
+            flex-wrap: wrap;
+        }
+
+        .goto-page-form {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Jarak antar elemen dalam form */
+            display: inline-block;
+        }
+
+        .goto-page-form label {
+            font-size: 0.85rem;
+            white-space: nowrap;
+            color: var(--text-light, #64748b);
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .goto-page-form .goto-input {
+            width: 60px !important; /* Lebar input yang pas */
+            text-align: center;
+            padding: 4px 5px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color, #e2e8f0);
+        }
+        
+        /* Sedikit styling untuk tombol Go */
+        .goto-page-form button {
+            border-radius: 6px;
+            padding: 4px 10px;
+        }
+
+/* Style Tambahan Khusus Timeline Statis */
+.timeline-static {
+    border-left: 2px solid #e9ecef;
+    padding-left: 20px;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 20px;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #ccc;
+}
+.timeline-item.active::before {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(129, 0, 127, 0.2);
+}
+.text-primary-custom {
+    color: var(--primary-color);
+}
+
 /* =========================================
    5. RESPONSIVE MOBILE (Layar < 768px)
    ========================================= */
@@ -234,6 +388,12 @@ body {
     /* 4. Penyesuaian Komponen Mobile */
     .login-card, .result-card {
         border-radius: 1rem;
+        margin: 1rem auto;
+        border-radius: 1rem;
+    }
+
+    .result-card .form-panel {
+        padding: 2rem 1.5rem;
     }
     
     .illustration-panel {
@@ -248,4 +408,18 @@ body {
         width: 100%;
         position: relative;
     }
-}           
+}
+
+@media (max-width: 992px) {
+    .form-panel {
+        padding: 2rem;
+    }
+
+    .illustration-panel {
+        padding: 2rem;
+    }
+
+    .illustration-panel img {
+        max-width: 220px;
+    }
+}
