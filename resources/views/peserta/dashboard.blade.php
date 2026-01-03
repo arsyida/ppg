@@ -14,7 +14,13 @@
                         <a href="{{ route('peserta.edit') }}" class="btn btn-primary shadow-sm px-4 py-2 mb-4">
                             Perbarui Data
                         </a>
-                        
+                        {{-- Flash Message --}}
+                        @if(session('message'))
+                            <div class="alert alert-success alert-dismissible fade show">
+                                {{ session('message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        @endif
                         <hr class="my-4">
 
                         <div class="card shadow-sm border-0" style="border-radius: var(--radius-lg);">

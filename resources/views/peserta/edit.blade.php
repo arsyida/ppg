@@ -28,7 +28,7 @@
 
                             <div class="row">
                                 <div class="col-md-5 col-lg-4">
-                                    <label class="form-label fw-medium">Pas Foto <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-medium">Pas Foto</label>
                                     <div class="pas-foto-placeholder mb-2">
                                         @if ($peserta->pas_foto)
                                         <img src="{{ asset('storage/' . $peserta->pas_foto) }}" 
