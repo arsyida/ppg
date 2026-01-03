@@ -7,7 +7,7 @@
     <div class="d-flex" id="wrapper">
 
         <div id="page-content-wrapper">
-            <div class="container-fluid p-4 p-md-5">
+            <div class="container-fluid pb-5 p-md-5">
 
             {{-- Flash Message --}}
             @if(session('message'))
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-7 col-lg-8 s mt-md-0">
+                                <div class="col-md-7 col-lg-8 mt-3 mt-md-0">
                                     <div class="row">
                                         <div class="mt-lg-0">
                                         <label for="nama_peserta" class="form-label fw-medium">Nama Lengkap <span class="text-danger">*</span></label>

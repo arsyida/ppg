@@ -6,7 +6,7 @@
     
     <div class="d-flex" id="wrapper">
         <div id="page-content-wrapper">
-            <div class="container-fluid p-4 p-md-5">
+            <div class="container-fluid pb-5 p-md-5">
                 <div class="row">
                     <div class="col-12">
                         <h1 class="h2 mb-3 fw-bold text-success">Selamat Anda Dinyatakan Lulus UKPPG 2025</h1>
@@ -26,7 +26,7 @@
                         <div class="card shadow-sm border-0" style="border-radius: var(--radius-lg);">
                             <div class="card-body p-4 p-md-5">
                                 <div class="row">
-                                    <div class="col-md-4 d-flex align-items-start justify-content-center mt-4 mt-md-0">
+                                    <div class="col-md-4 d-flex align-items-start justify-content-center mb-5 mb-md-0">
                                         <div class="pas-foto-placeholder">
                                             <?php if (!empty($peserta['pas_foto'])): ?>
                                                 <img src="{{ asset('storage/' . $peserta['pas_foto']) }}" 
