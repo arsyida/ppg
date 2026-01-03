@@ -23,7 +23,7 @@
                                     <div class="col-md-4 d-flex align-items-start justify-content-center mt-4 mt-md-0">
                                         <div class="pas-foto-placeholder">
                                             <?php if (!empty($peserta['pas_foto'])): ?>
-                                                <img src="uploads/<?= htmlspecialchars($peserta['pas_foto']) ?>" 
+                                                <img src="{{ asset('storage/' . $peserta['pas_foto']) }}" 
                                                      alt="Pas Foto Peserta" 
                                                      style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md);">
                                             <?php else: ?>
