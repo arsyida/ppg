@@ -15,6 +15,6 @@ class Peserta extends Model
     // Tentukan kolom mana saja yang boleh diisi (Mass Assignment)
     protected $fillable = [
         'nama_peserta', 'nik', 'no_hp', 'tempat_lahir', 
-        'tanggal_lahir', 'nim', 'jenis_ppg', 'alamat_lengkap', 'pas_foto', 'nama_bidang_studi', 'no_ukg'
+        'tanggal_lahir', 'nim', 'jenis_ppg', 'alamat_lengkap', 'pas_foto', 'nama_bidang_studi'
     ];
 }

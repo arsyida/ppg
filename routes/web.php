@@ -35,9 +35,6 @@ Route::middleware(['auth.peserta', 'no.cache'])->group(function () {
 
     // page tracking/info pengiriman
     Route::get('/tracking', [PesertaController::class, 'tracking'])->name('peserta.tracking');
-
-    // Route POST untuk memproses simpan
-    Route::post('/simpan', [PesertaController::class, 'update'])->name('peserta.update');
 });
 
 
