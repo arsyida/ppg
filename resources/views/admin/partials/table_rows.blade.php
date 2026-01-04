@@ -17,7 +17,13 @@
         <td>{{ $peserta->jenis_ppg }}</td>
         <td>{{ $peserta->no_hp ?? '-' }}</td>
         <td>{{ $peserta->alamat_lengkap ?? '-' }}</td>
-        <td>{{ $peserta->pas_foto ?? '-' }}</td>
+        <td>
+            @if ($peserta->pas_foto)
+            <img style="width: 60px; height: 80px; object-fit: cover;" src="{{ asset('storage/' . $peserta->pas_foto) }}" alt="{{ $peserta->pas_foto ?? '-' }}">
+            @else
+            -
+            @endif
+        </td>
         <td>
             <a href="{{ route('admin.peserta.edit', $peserta->no_ukg) }}" class="btn btn-sm btn-warning">
                 <i class="bi bi-pencil-fill"></i> Edit

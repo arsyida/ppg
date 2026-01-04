@@ -11,35 +11,33 @@
         $nextUrl = $peserta_list->nextPageUrl();
     @endphp
 
-    <nav aria-label="Page navigation" style="display:flex;">
-        <ul class="pagination-custom">
-            
-            {{-- Tombol Back --}}
-            <li class="{{ $peserta_list->onFirstPage() ? 'disabled' : '' }}">
-                <a class="nav-link page-link" href="{{ $prevUrl ?? '#' }}">&lt; Back</a>
-            </li>
-
-            {{-- Info Halaman (Contoh: 1 / 5) --}}
-            <li class="active"><a class="page-link">{{ $currentPage }}</a></li>
-            <li style="padding: 0 5px; display:flex; align-items:center;"><span>/</span></li>
-            <li class="active"><a class="page-link">{{ $lastPage }}</a></li>
-
-            {{-- Tombol Next --}}
-            <li class="{{ !$peserta_list->hasMorePages() ? 'disabled' : '' }}">
-                <a class="nav-link page-link" href="{{ $nextUrl ?? '#' }}">Next &gt;</a>
-            </li>
-        </ul>
-
+    <nav aria-label="Page navigation" class="justify-content-between">
         {{-- Form Go To Page --}}
-        <form method="GET" action="{{ route('admin.dashboard') }}" class="goto-page-form" style="display: flex; align-items: center; margin-left: 15px; gap: 8px;">
+        <form method="GET" action="{{ route('admin.dashboard') }}" class="goto-page-form d-flex">
             {{-- Pertahankan keyword pencarian jika ada --}}
             @if(request('search') || request('keyword'))
                 <input type="hidden" name="search" value="{{ request('search') ?? request('keyword') }}">
             @endif
 
             <label for="page-input">Ke</label>
-            <input type="number" id="page-input" name="page" min="1" max="{{ $lastPage }}" value="{{ $currentPage }}" class="form-control form-control-sm goto-input" style="width: 72px;">
-            <button type="submit" class="btn btn-sm btn-primary" style="margin-left:12px">Go</button>
+            <input type="number" id="page-input" name="page" min="1" max="{{ $lastPage }}" value="{{ $currentPage }}" class="form-control form-control-sm goto-input">
+            <button type="submit" class="btn btn-sm btn-primary">Go</button>
         </form>
+        <ul class="pagination-custom">
+            {{-- Tombol Back --}}
+            <li class="{{ $peserta_list->onFirstPage() ? 'disabled' : '' }}">
+                <a class="nav-link page-link" href="{{ $prevUrl ?? '#' }}">&lt; Back</a>
+            </li>
+
+            {{-- Info Halaman (Contoh: 1 / 5) --}}
+            <li class="active"><a class="page-link">{{ $currentPage }}/{{ $lastPage }}</a></li>
+            <!-- <li class="d-flex align-items-center"><span>/</span></li>
+            <li class="active"><a class="page-link">{{ $lastPage }}</a></li> -->
+
+            {{-- Tombol Next --}}
+            <li class="{{ !$peserta_list->hasMorePages() ? 'disabled' : '' }}">
+                <a class="nav-link page-link" href="{{ $nextUrl ?? '#' }}">Next &gt;</a>
+            </li>
+        </ul>
     </nav>
 @endif
