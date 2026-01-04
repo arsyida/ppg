@@ -19,7 +19,7 @@
         <td>{{ $peserta->alamat_lengkap ?? '-' }}</td>
         <td>
             @if ($peserta->pas_foto)
-            <img style="width: 60px; height: 80px; object-fit: cover;" src="{{ asset('storage/' . $peserta->pas_foto) }}" alt="{{ $peserta->pas_foto ?? '-' }}">
+            <img style="width: 60px; height: 80px; object-fit: cover;" src="{{ asset('storage/' . $peserta->pas_foto) }}" alt="{{ $peserta->nama_peserta ?? '-' }}">
             @else
             -
             @endif

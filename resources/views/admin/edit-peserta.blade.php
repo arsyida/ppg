@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- Container fluid padding menyesuaikan kode asli --}}
-<div class="container-fluid p-4 p-md-5">
+<div class="container-fluid p-2 p-md-5">
     <h1 class="h2 mb-4 fw-bold">Edit Data: {{ $peserta->nama_peserta }}</h1>
 
     {{-- Tampilkan Error jika ada --}}
