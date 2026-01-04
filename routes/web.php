@@ -41,14 +41,14 @@ Route::middleware(['auth.peserta', 'no.cache'])->group(function () {
 // ==========================
 // 3. AREA KHUSUS ADMIN
 // ==========================
-Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
+Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
 
     // Dashboard Page
-    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
     // Import Page
-    Route::get('import', [AdminController::class, 'importPage'])->name('admin.import');
-    Route::post('import', [AdminController::class, 'processImport'])->name('admin.import.proses');
+    Route::get('/import', [AdminController::class, 'importPage'])->name('admin.import');
+    Route::post('/import', [AdminController::class, 'processImport'])->name('admin.import.proses');
 
     // Route Export Excel
     Route::get('/export', [AdminController::class, 'exportExcel'])->name('admin.export');
