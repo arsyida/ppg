@@ -30,7 +30,8 @@ class AdminController extends Controller
             $query->where(function($q) use ($keyword) {
                 $q->where('nama_peserta', 'like', '%' . $keyword . '%')
                   ->orWhere('no_ukg', 'like', '%' . $keyword . '%')
-                  ->orWhere('nim', 'like', '%' . $keyword . '%');
+                  ->orWhere('nim', 'like', '%' . $keyword . '%')
+                  ->orWhere('nik', 'like', '%' . $keyword . '%');
             });
         }
 

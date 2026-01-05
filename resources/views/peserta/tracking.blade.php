@@ -50,15 +50,18 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <small class="text-muted d-block">Nama Penerima</small>
-                                    <span class="fw-semibold"><?= htmlspecialchars($peserta['nama_peserta'] ?? '-') ?></span>
+                                    {{-- Menggunakan Syntax Blade & Object Access --}}
+                                    <span class="fw-semibold">{{ $peserta->nama_peserta ?? '-' }}</span>
                                 </div>
                                 <div class="col-md-6">
                                     <small class="text-muted d-block">Nomor UKG</small>
-                                    <span class="font-monospace"><?= htmlspecialchars($peserta['no_ukg'] ?? '-') ?></span>
+                                    {{-- Menggunakan Syntax Blade & Object Access --}}
+                                    <span class="font-monospace">{{ $peserta->no_ukg ?? '-' }}</span>
                                 </div>
                                 <div class="col-12">
                                     <small class="text-muted d-block">Alamat Tujuan (Sesuai Data)</small>
-                                    <span><?= htmlspecialchars($peserta['alamat_lengkap'] ?? 'Alamat belum dilengkapi') ?></span>
+                                    {{-- Menggunakan Syntax Blade & Object Access --}}
+                                    <span>{{ $peserta->alamat_lengkap ?? 'Alamat belum dilengkapi' }}</span>
                                 </div>
                             </div>
                         </div>
