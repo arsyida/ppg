@@ -1,4 +1,4 @@
-@if ($peserta_list->hasPages() || $peserta_list->total() == 0)
+@if (isset($peserta_list))
     @php
         // Ambil variabel pagination dari object Laravel
         $currentPage = $peserta_list->currentPage();

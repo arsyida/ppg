@@ -44,7 +44,7 @@ class AdminController extends Controller
         if ($request->has('ajax_search')) {
             // Render partial view menjadi string HTML
             $table_html = view('admin.partials.table_rows', compact('peserta_list'))->render();
-            $pagination_html = view('admin.partials.pagination_custom', compact('peserta_list'))->render();
+            $pagination_html = view('admin.partials.pagination', compact('peserta_list'))->render();
 
             return response()->json([
                 'table_html' => $table_html,
@@ -157,7 +157,26 @@ class AdminController extends Controller
         return view('admin.edit-peserta', compact('peserta'));
     }
 
-    // 2. Memproses Update Data
+    public function deleteFoto($no_ukg)
+    {
+        $peserta = Peserta::where('no_ukg', $no_ukg)->first();
+
+        if (!$peserta) {
+            return back()->with('error', 'Peserta tidak ditemukan.');
+        }
+
+        // 1. Hapus File Fisik
+        if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+            Storage::disk('public')->delete($peserta->pas_foto);
+        }
+
+        // 2. Update Database jadi NULL
+        $peserta->update(['pas_foto' => null]);
+
+        return back()->with('success', 'Foto berhasil dihapus.');
+    }
+
+    // Memproses Update Data
     public function updatePeserta(Request $request, $no_ukg)
     {
         // 1. Tambahkan Validasi Max Length
@@ -175,6 +194,20 @@ class AdminController extends Controller
         $peserta = Peserta::where('no_ukg', $no_ukg)->first();
 
         if ($peserta) {
+
+            if ($request->hasFile('pas_foto')) {
+            // A. Hapus foto lama jika ada (biar server gak penuh)
+            if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+                Storage::disk('public')->delete($peserta->pas_foto);
+            }
+
+            // B. Simpan foto baru
+            $path = $request->file('pas_foto')->store('uploads/' . date('Y/m'), 'public');
+            
+            // C. Masukkan path baru ke array data yang mau diupdate
+            $request->merge(['pas_foto_path' => $path]); // Helper sementara
+            }
+            // 2. Update Data Peserta
             $peserta->update([
                 'nama_peserta'      => $request->nama_peserta,
                 'tempat_lahir'      => $request->tempat_lahir,
@@ -184,11 +217,11 @@ class AdminController extends Controller
                 'nik'               => $request->nik,
                 'nama_bidang_studi' => $request->nama_bidang_studi,
                 'jenis_ppg'         => $request->jenis_ppg,
-
-                // Laravel otomatis memotong jika validasi lolos tapi data kepanjangan (opsional, tapi lebih baik validasi di atas)
                 'no_hp'             => $request->no_hp, 
-
                 'alamat_lengkap'    => $request->alamat_lengkap,
+
+                // Cek: Jika ada upload foto baru, pakai path baru. Jika tidak, abaikan (jangan di-null-kan)
+                'pas_foto'          => $request->hasFile('pas_foto') ? $request->file('pas_foto')->store('uploads/' . date('Y/m'), 'public') : $peserta->pas_foto,
             ]);
 
             return redirect()->route('admin.dashboard')->with('success', 'Data berhasil diperbarui!');
@@ -260,6 +293,26 @@ class AdminController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', "Error: Gagal mengimpor data. " . $e->getMessage());
         }
+    }
+
+    public function destroy($no_ukg)
+    {
+        // 1. Cari Peserta
+        $peserta = Peserta::where('no_ukg', $no_ukg)->first();
+
+        if (!$peserta) {
+            return back()->with('error', 'Data peserta tidak ditemukan.');
+        }
+
+        // 2. Hapus File Foto Fisik (Jika ada)
+        if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+            Storage::disk('public')->delete($peserta->pas_foto);
+        }
+
+        // 3. Hapus Data dari Database
+        $peserta->delete();
+
+        return back()->with('success', 'Data peserta berhasil dihapus.');
     }
 }
 

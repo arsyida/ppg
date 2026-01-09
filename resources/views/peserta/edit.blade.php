@@ -50,7 +50,7 @@
                                         @error('pas_foto')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    <small class="form-text text-muted">Upload pas foto dengan background merah (format .jpg/.png).</small>
+                                    <small class="form-text text-muted">Upload pas foto dengan background merah (format .jpeg/.jpg/.png).</small>
                                     
                                     <div class="mt-4">
                                         <label for="no_ukg" class="form-label fw-medium">No UKG</label>

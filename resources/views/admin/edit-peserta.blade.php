@@ -16,11 +16,48 @@
     <div class="card shadow-sm border-0">
         <div class="card-body p-4 p-md-5">
             {{-- Form Action mengarah ke route update --}}
-            <form method="POST" action="{{ route('admin.peserta.update', $peserta->no_ukg) }}">
+            <form method="POST" action="{{ route('admin.peserta.update', $peserta->no_ukg) }} " enctype="multipart/form-data">
                 @csrf
-                @method('PUT') {{-- Metode update di Laravel sebaiknya menggunakan PUT --}}
+                @method('PUT') {{-- Metode update --}}
 
                 <div class="row">
+
+                    <div class="col-12 mb-4">
+                        <label class="form-label fw-medium">Pas Foto</label>
+                        <div class="d-flex align-items-start gap-3">
+                            {{-- Preview Foto --}}
+                            <div class="pas-foto-placeholder" style="width: 150px; height: 200px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
+                                @if ($peserta->pas_foto)
+                                    <img src="{{ asset('storage/' . $peserta->pas_foto) }}" 
+                                         alt="Pas Foto" 
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                @else
+                                    <div class="text-center text-muted small">Pas foto<br>3 x 4</div>
+                                @endif
+                            </div>
+
+                            {{-- Tombol Aksi Foto --}}
+                            <div class="d-flex flex-column gap-2">
+                                {{-- Input Upload Baru --}}
+                                <input type="file" 
+                                    id="pas_foto" 
+                                    name="pas_foto" 
+                                    accept="image/jpeg, image/png, image/jpg" 
+                                    class="form-control form-control-sm">
+                                <small class="text-muted">Upload pas foto dengan background merah (format .jpeg/.jpg/.png).</small>
+
+                                {{-- TOMBOL HAPUS (Hanya muncul jika ada foto) --}}
+                                @if ($peserta->pas_foto)
+                                    <button type="button" 
+                                            class="btn btn-danger btn-md text-center" 
+                                            onclick="if(confirm('Yakin ingin menghapus foto ini selamanya?')) { document.getElementById('form-delete-foto').submit(); }">
+                                        <i class="bi bi-trash me-1"></i> Hapus Foto Saat Ini
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-6 mb-3">
                         <label for="nama_peserta" class="form-label fw-medium">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama_peserta" name="nama_peserta" 
@@ -95,4 +132,9 @@
         </div>
     </div>
 </div>
+
+<form id="form-delete-foto" action="{{ route('admin.peserta.delete-foto', $peserta->no_ukg) }}" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
 @endsection

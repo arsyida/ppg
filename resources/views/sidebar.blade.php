@@ -1,5 +1,5 @@
 <!-- Sidebar for Admin -->
-@if (session()->has('admin_logged_in'))
+@if (Request::is('admin*'))
 <div class="bg-white border-end" id="sidebar-wrapper">
     <div class="sidebar-heading text-center py-4">
         <img src="{{ asset('assets/images/Logo-PPG-FKIP.png') }}" alt="Logo PPG" style="width: 50px;">
@@ -23,8 +23,8 @@
         </a>
     </div>
 </div>
-@php return; @endphp
-@endif
+
+@else
 
 <!-- Sidebar for Peserta -->
 <div class="bg-white border-end" id="sidebar-wrapper">
@@ -55,3 +55,5 @@
         </a>
     </div>
 </div>
+
+@endif

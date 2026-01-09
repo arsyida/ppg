@@ -56,7 +56,14 @@ Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
     // Route untuk Halaman Edit
     Route::get('/data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
 
+    // Route untuk hapus foto spesifik
+    Route::delete('/admin/peserta/{no_ukg}/delete-foto', [AdminController::class, 'deleteFoto'])->name('admin.peserta.delete-foto');
+
     // Route untuk Proses Update (POST/PUT)
     Route::put('/data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
+
+    // Route untuk menghapus peserta
+    Route::delete('/admin/peserta/{no_ukg}', [App\Http\Controllers\AdminController::class, 'destroy'])
+        ->name('admin.peserta.destroy');
 
 });
