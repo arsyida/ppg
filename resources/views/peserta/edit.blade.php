@@ -7,7 +7,7 @@
     <div class="d-flex" id="wrapper">
 
         <div id="page-content-wrapper">
-            <div class="container-fluid p-4 p-md-5">
+            <div class="container-fluid pb-5 p-md-5">
 
             {{-- Flash Message --}}
             @if(session('message'))
@@ -50,18 +50,18 @@
                                         @error('pas_foto')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    <small class="form-text text-muted">Upload pas foto dengan background merah (format .jpg/.png).</small>
+                                    <small class="form-text text-muted">Upload pas foto dengan background merah (format .jpeg/.jpg/.png).</small>
                                     
                                     <div class="mt-4">
                                         <label for="no_ukg" class="form-label fw-medium">No UKG</label>
                                         <input type="text" 
                                             class="form-control" 
                                             value="{{ $peserta->no_ukg }}" 
-                                            readonly>
+                                            disabled>
                                     </div>
 
                                     <div class="mt-4">
-                                        <label for="nama_bidang_studi" class="form-label fw-medium">Bidang Studi</label>
+                                        <label for="nama_bidang_studi" class="form-label fw-medium">Bidang Studi <span class="text-danger">*</span></label>
                                         <input type="text" 
                                             class="form-control" 
                                             id="nama_bidang_studi" 
@@ -71,10 +71,10 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-7 col-lg-8 s mt-md-0">
+                                <div class="col-md-7 col-lg-8 mt-3 mt-md-0">
                                     <div class="row">
                                         <div class="mt-lg-0">
-                                        <label for="nama_peserta" class="form-label fw-medium">Nama Lengkap</label>
+                                        <label for="nama_peserta" class="form-label fw-medium">Nama Lengkap <span class="text-danger">*</span></label>
                                         <input type="text" 
                                                class="form-control" 
                                                id="nama_peserta" 
@@ -84,7 +84,7 @@
                                         </div>
 
                                         <div class="col-lg-6 mt-3">
-                                            <label for="nik" class="form-label fw-medium">NIK</label>
+                                            <label for="nik" class="form-label fw-medium">NIK <span class="text-danger">*</span></label>
                                             <input type="text" 
                                                    name="nik" 
                                                    class="form-control" 
@@ -101,7 +101,7 @@
                                         </div>
 
                                         <div class="col-lg-6 mt-3">
-                                            <label for="no_hp" class="form-label fw-medium">No HP</label>
+                                            <label for="no_hp" class="form-label fw-medium">No HP <span class="text-danger">*</span></label>
                                             <input type="text" 
                                                    name="no_hp" 
                                                    class="form-control" 
@@ -118,17 +118,17 @@
                                         </div>
 
                                         <div class="col-lg-6 mt-3">
-                                            <label for="tempat_lahir" class="form-label fw-medium">Tempat Lahir</label>
+                                            <label for="tempat_lahir" class="form-label fw-medium">Tempat Lahir <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" 
                                                value="{{ old('tempat_lahir', $peserta->tempat_lahir) }}" required>
                                         </div>
                                         <div class="col-lg-6 mt-3">
-                                            <label for="tanggal_lahir" class="form-label fw-medium">Tanggal Lahir</label>
+                                            <label for="tanggal_lahir" class="form-label fw-medium">Tanggal Lahir <span class="text-danger">*</span></label>
                                             <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" 
                                                value="{{ old('tanggal_lahir', $peserta->tanggal_lahir) }}" required>
                                         </div>
                                         <div class="col-lg-6 mt-3">
-                                            <label for="nim" class="form-label fw-medium">NIM</label>
+                                            <label for="nim" class="form-label fw-medium">NIM <span class="text-danger">*</span></label>
                                             <input type="text" 
                                                    name="nim" 
                                                    class="form-control" 
@@ -146,12 +146,12 @@
 
                                         <div class="col-lg-6 mt-3">
                                             <label for="jenis_ppg" class="form-label fw-medium">Jenis PPG</Label>
-                                            <input type="text" class="form-control bg-light" value="{{ $peserta->jenis_ppg }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $peserta->jenis_ppg }}" disabled>
                                         </div>
 
                                         <div class="col-12 mt-3">
-                                            <label for="alamat_lengkap" class="form-label fw-medium">Alamat Lengkap</label>
-                                            <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" rows="7" placeholder="Jalan, RT RW, Desa, Kecamatan, Kabupaten, Provinsi, Kode pos" required>{{ old('alamat_lengkap', $peserta->alamat_lengkap) }}</textarea>
+                                            <label for="alamat_lengkap" class="form-label fw-medium">Alamat Lengkap <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" rows="7" placeholder="Silahkan masukan alamat lengkap seperti Jalan, RT RW, Desa, Kecamatan, Kabupaten, Provinsi, Kode pos" required>{{ old('alamat_lengkap', $peserta->alamat_lengkap) }}</textarea>
                                             <p class="text-danger"><small>*Alamat ini akan digunakan untuk pengiriman sertifikat pendidik.</small></p>
                                         </div>
                                     </div>

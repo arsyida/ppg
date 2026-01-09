@@ -35,23 +35,20 @@ Route::middleware(['auth.peserta', 'no.cache'])->group(function () {
 
     // page tracking/info pengiriman
     Route::get('/tracking', [PesertaController::class, 'tracking'])->name('peserta.tracking');
-
-    // Route POST untuk memproses simpan
-    Route::post('/simpan', [PesertaController::class, 'update'])->name('peserta.update');
 });
 
 
 // ==========================
 // 3. AREA KHUSUS ADMIN
 // ==========================
-Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
+Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
 
     // Dashboard Page
-    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
     // Import Page
-    Route::get('import', [AdminController::class, 'importPage'])->name('admin.import');
-    Route::post('import', [AdminController::class, 'processImport'])->name('admin.import.proses');
+    Route::get('/import', [AdminController::class, 'importPage'])->name('admin.import');
+    Route::post('/import', [AdminController::class, 'processImport'])->name('admin.import.proses');
 
     // Route Export Excel
     Route::get('/export', [AdminController::class, 'exportExcel'])->name('admin.export');
@@ -59,7 +56,14 @@ Route::prefix('admin')->middleware(['auth.admin'])->group(function () {
     // Route untuk Halaman Edit
     Route::get('/data-peserta/edit/{no_ukg}', [AdminController::class, 'editPeserta'])->name('admin.peserta.edit');
 
+    // Route untuk hapus foto spesifik
+    Route::delete('/admin/peserta/{no_ukg}/delete-foto', [AdminController::class, 'deleteFoto'])->name('admin.peserta.delete-foto');
+
     // Route untuk Proses Update (POST/PUT)
     Route::put('/data-peserta/update/{no_ukg}', [AdminController::class, 'updatePeserta'])->name('admin.peserta.update');
+
+    // Route untuk menghapus peserta
+    Route::delete('/admin/peserta/{no_ukg}', [App\Http\Controllers\AdminController::class, 'destroy'])
+        ->name('admin.peserta.destroy');
 
 });

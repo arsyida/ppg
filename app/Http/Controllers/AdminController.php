@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Models\Admin; // Panggil Model 
 use App\Models\Peserta;
 use Illuminate\Support\Facades\Storage; // Untuk upload file
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Exception;
 
 
 class AdminController extends Controller
@@ -25,7 +30,8 @@ class AdminController extends Controller
             $query->where(function($q) use ($keyword) {
                 $q->where('nama_peserta', 'like', '%' . $keyword . '%')
                   ->orWhere('no_ukg', 'like', '%' . $keyword . '%')
-                  ->orWhere('nim', 'like', '%' . $keyword . '%');
+                  ->orWhere('nim', 'like', '%' . $keyword . '%')
+                  ->orWhere('nik', 'like', '%' . $keyword . '%');
             });
         }
 
@@ -38,7 +44,7 @@ class AdminController extends Controller
         if ($request->has('ajax_search')) {
             // Render partial view menjadi string HTML
             $table_html = view('admin.partials.table_rows', compact('peserta_list'))->render();
-            $pagination_html = view('admin.partials.pagination_custom', compact('peserta_list'))->render();
+            $pagination_html = view('admin.partials.pagination', compact('peserta_list'))->render();
 
             return response()->json([
                 'table_html' => $table_html,
@@ -112,7 +118,7 @@ class AdminController extends Controller
 
             // Kolom K: Link Foto
             if (!empty($peserta->pas_foto)) {
-                $fullUrl = $baseUrl . $peserta->pas_foto;
+                $fullUrl = asset('storage/' . $peserta->pas_foto);
                 $sheet->setCellValue('K' . $row, $fullUrl);
                 $sheet->getCell('K' . $row)->getHyperlink()->setUrl($fullUrl);
                 // Ubah warna jadi biru agar terlihat seperti link
@@ -151,7 +157,26 @@ class AdminController extends Controller
         return view('admin.edit-peserta', compact('peserta'));
     }
 
-    // 2. Memproses Update Data
+    public function deleteFoto($no_ukg)
+    {
+        $peserta = Peserta::where('no_ukg', $no_ukg)->first();
+
+        if (!$peserta) {
+            return back()->with('error', 'Peserta tidak ditemukan.');
+        }
+
+        // 1. Hapus File Fisik
+        if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+            Storage::disk('public')->delete($peserta->pas_foto);
+        }
+
+        // 2. Update Database jadi NULL
+        $peserta->update(['pas_foto' => null]);
+
+        return back()->with('success', 'Foto berhasil dihapus.');
+    }
+
+    // Memproses Update Data
     public function updatePeserta(Request $request, $no_ukg)
     {
         // 1. Tambahkan Validasi Max Length
@@ -169,6 +194,20 @@ class AdminController extends Controller
         $peserta = Peserta::where('no_ukg', $no_ukg)->first();
 
         if ($peserta) {
+
+            if ($request->hasFile('pas_foto')) {
+            // A. Hapus foto lama jika ada (biar server gak penuh)
+            if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+                Storage::disk('public')->delete($peserta->pas_foto);
+            }
+
+            // B. Simpan foto baru
+            $path = $request->file('pas_foto')->store('uploads/' . date('Y/m'), 'public');
+            
+            // C. Masukkan path baru ke array data yang mau diupdate
+            $request->merge(['pas_foto_path' => $path]); // Helper sementara
+            }
+            // 2. Update Data Peserta
             $peserta->update([
                 'nama_peserta'      => $request->nama_peserta,
                 'tempat_lahir'      => $request->tempat_lahir,
@@ -178,11 +217,11 @@ class AdminController extends Controller
                 'nik'               => $request->nik,
                 'nama_bidang_studi' => $request->nama_bidang_studi,
                 'jenis_ppg'         => $request->jenis_ppg,
-
-                // Laravel otomatis memotong jika validasi lolos tapi data kepanjangan (opsional, tapi lebih baik validasi di atas)
                 'no_hp'             => $request->no_hp, 
-
                 'alamat_lengkap'    => $request->alamat_lengkap,
+
+                // Cek: Jika ada upload foto baru, pakai path baru. Jika tidak, abaikan (jangan di-null-kan)
+                'pas_foto'          => $request->hasFile('pas_foto') ? $request->file('pas_foto')->store('uploads/' . date('Y/m'), 'public') : $peserta->pas_foto,
             ]);
 
             return redirect()->route('admin.dashboard')->with('success', 'Data berhasil diperbarui!');
@@ -190,4 +229,90 @@ class AdminController extends Controller
 
         return back()->with('error', 'Gagal memperbarui data.');
     }
+
+    public function importPage(){
+        return view('admin.import');
+    }
+
+    public function processImport(Request $request)
+    {
+        // 1. Validasi File menggunakan Laravel Validator
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls|max:5120', // Maks 5MB
+        ]);
+
+        try {
+            $file = $request->file('file_excel');
+            $spreadsheet = IOFactory::load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $highestRow = $sheet->getHighestRow();
+            
+            $dataToUpsert = [];
+            $processedCount = 0;
+
+            // 2. Loop Baris (Mulai dari baris ke-2)
+            for ($row = 2; $row <= $highestRow; $row++) {
+                $no_ukg = $sheet->getCell('A' . $row)->getValue();
+
+                // Skip jika baris kosong
+                if (empty($no_ukg)) continue;
+
+                // Masukkan ke array koleksi
+                $dataToUpsert[] = [
+                    'no_ukg'            => trim($no_ukg),
+                    'nama_peserta'      => $sheet->getCell('B' . $row)->getValue(),
+                    'nik'               => $sheet->getCell('C' . $row)->getValue(),
+                    'nim'               => $sheet->getCell('D' . $row)->getValue(),
+                    'tempat_lahir'      => $sheet->getCell('E' . $row)->getValue(),
+                    'tanggal_lahir'     => $sheet->getCell('F' . $row)->getValue(),
+                    'nama_bidang_studi' => $sheet->getCell('G' . $row)->getValue(),
+                    'jenis_ppg'         => $sheet->getCell('H' . $row)->getValue(),
+                    'no_hp'             => $sheet->getCell('I' . $row)->getValue(),
+                    'alamat_lengkap'    => $sheet->getCell('J' . $row)->getValue(),
+                    'pas_foto'          => $sheet->getCell('K' . $row)->getValue(),
+                ];
+
+                $processedCount++;
+            }
+
+            // 3. Eksekusi UPSERT (Massive Insert or Update)
+            if (!empty($dataToUpsert)) {
+                DB::transaction(function () use ($dataToUpsert) {
+                    // Argumen 1: Data yang akan diproses
+                    // Argumen 2: Kolom kunci unik (no_ukg)
+                    // Argumen 3: Kolom yang diupdate jika no_ukg sudah ada
+                    Peserta::upsert($dataToUpsert, ['no_ukg'], [
+                        'nama_peserta', 'nik', 'nim', 'tempat_lahir', 
+                        'tanggal_lahir', 'nama_bidang_studi', 'jenis_ppg', 
+                        'no_hp', 'alamat_lengkap', 'pas_foto'
+                    ]);
+                });
+            }
+
+            return redirect()->back()->with('message', "Sukses: Berhasil mengimpor/memperbarui $processedCount data peserta.");
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', "Error: Gagal mengimpor data. " . $e->getMessage());
+        }
+    }
+
+    public function destroy($no_ukg)
+    {
+        // 1. Cari Peserta
+        $peserta = Peserta::where('no_ukg', $no_ukg)->first();
+
+        if (!$peserta) {
+            return back()->with('error', 'Data peserta tidak ditemukan.');
+        }
+
+        // 2. Hapus File Foto Fisik (Jika ada)
+        if ($peserta->pas_foto && Storage::disk('public')->exists($peserta->pas_foto)) {
+            Storage::disk('public')->delete($peserta->pas_foto);
+        }
+
+        // 3. Hapus Data dari Database
+        $peserta->delete();
+
+        return back()->with('success', 'Data peserta berhasil dihapus.');
+    }
 }
+

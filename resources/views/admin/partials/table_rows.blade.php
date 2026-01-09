@@ -17,11 +17,27 @@
         <td>{{ $peserta->jenis_ppg }}</td>
         <td>{{ $peserta->no_hp ?? '-' }}</td>
         <td>{{ $peserta->alamat_lengkap ?? '-' }}</td>
-        <td>{{ $peserta->pas_foto ?? '-' }}</td>
         <td>
-            <a href="{{ route('admin.peserta.edit', $peserta->no_ukg) }}" class="btn btn-sm btn-warning">
-                <i class="bi bi-pencil-fill"></i> Edit
-            </a>
+            @if ($peserta->pas_foto)
+            <img style="width: 60px; height: 80px; object-fit: cover;" src="{{ asset('storage/' . $peserta->pas_foto) }}" alt="{{ $peserta->nama_peserta ?? '-' }}">
+            @else
+            -
+            @endif
+        </td>
+        <td>
+            <div class="d-flex gap-1">
+                <a href="{{ route('admin.peserta.edit', $peserta->no_ukg) }}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <form action="{{ route('admin.peserta.destroy', $peserta->no_ukg) }}" method="POST" class="d-inline">
+                    
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                        <i class="bi bi-trash-fill"></i> Hapus
+                    </button>
+                </form>
+            </div>
         </td>
     </tr>
     @endforeach
