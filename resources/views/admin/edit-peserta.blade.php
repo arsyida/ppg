@@ -24,7 +24,7 @@
 
                     <div class="col-12 mb-4">
                         <label class="form-label fw-medium">Pas Foto</label>
-                        <div class="d-flex align-items-start gap-3">
+                        <div class="d-flex flex-column flex-md-row align-items-start gap-3">
                             {{-- Preview Foto --}}
                             <div class="pas-foto-placeholder" style="width: 150px; height: 200px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
                                 @if ($peserta->pas_foto)
